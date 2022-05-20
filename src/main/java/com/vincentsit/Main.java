@@ -2,6 +2,7 @@ package com.vincentsit;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +15,15 @@ import org.json.simple.parser.ParseException;
 public class Main {
 
     public static void main(String[] args) {
+        String fileName = "storage.json";
         JSONParser jsonParser = new JSONParser();
 
         ATM machine = null;
+        JSONObject body = null;
 
-        try (FileReader data = new FileReader("storage.json")) {
+        try (FileReader data = new FileReader(fileName)) {
             Object obj = jsonParser.parse(data);
-            JSONObject body = (JSONObject) obj;
+            body = (JSONObject) obj;
             // System.out.println(body.toString());
             machine = initaliseATM((body));
         } catch (FileNotFoundException e) {
@@ -54,17 +57,17 @@ public class Main {
         String bankPinEntry;
 
         boolean verified = false;
-        
+
+        // TODO: fix this logic here
         while (pincodeTries > 0 && !verified) {
-            if (pincodeTries == 5) {
-                System.out.println("\nPlease enter your pincode:");
-            } else {
-                System.out.println("\nPlease try again. You have " + pincodeTries + " tries left.");
-            }
+            // if (pincodeTries == 5) {
+            //     System.out.println("\nPlease enter your pincode:");
+            // } else {
+            //     System.out.println("\nPlease try again. You have " + pincodeTries + " tries left.");
+            // }
             bankPinEntry = scan.nextLine();
             pincodeTries--;
-            scan.nextLine();
-            if (machine.checkUserCode(bankNumberEntry, bankPinEntry)) {
+            if (machine.checkUserCode(recordNumber, bankPinEntry)) {
                 verified = true;
             }
         }
@@ -86,13 +89,11 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("How much would you like to withdraw?");
-                    // vincent.withdraw(scan.nextInt());
-                    // System.out.println("Your bank account has " + vincent.getBankAmount());
+                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "withdraw", scan.nextInt()));
                     break;
                 case 3:
                     System.out.println("How much would you like to deposit?");
-                    // vincent.deposit(scan.nextInt());
-                    // System.out.println("Your bank account has " + vincent.getBankAmount());
+                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "deposit", scan.nextInt()));
                     break;
                 case 4:
                     quit = true;
@@ -103,6 +104,8 @@ public class Main {
             }
         }
         scan.close();
+
+        writeToFile(body, fileName);
     }
     
     public static ATM initaliseATM(JSONObject data) {
@@ -120,4 +123,13 @@ public class Main {
         return new ATM(location, currency, users);
     }
     
+    public static void writeToFile(JSONObject body, String fileName) {
+        try (FileWriter newData = new FileWriter(fileName)) {
+            BufferedWriter out = new BufferedWriter(newData);
+            out.write(body.toString());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -56,8 +56,8 @@ public class ATM {
         return -1;
     }
 
-    public boolean checkUserCode(String accountNumber, String pincodeEntry) {
-        return checkIfUserExists(accountNumber) >= 0 && pincodeEntry == users.get(checkIfUserExists(accountNumber)).get("bankPin");
+    public boolean checkUserCode(int index, String pincodeEntry) {
+        return index >= 0 && pincodeEntry.equals(users.get(index).get("bankPin"));
     }
 
     public String getUserName(int index) {
@@ -74,9 +74,27 @@ public class ATM {
     // save the update into a JSONObject, replace the JSONObject with this
     // write to file
 
-    // public double updateBankAmount(users) {
+    // pre-condition is that amountToChange is always in the positive
+    public double updateBankAmount(int index, String direction, double amountToChange) {
+        JSONObject user = users.get(index);
+        double bankAmount = (double) user.get("bankAmount");
+        switch(direction.toLowerCase()) {
+            case "deposit": 
+                bankAmount += amountToChange;
+                break;
+            case "withdraw":
+                bankAmount -= amountToChange;
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
+        user.put("bankAmount", bankAmount);
+        return bankAmount;
+    }
 
-    //     return 
+    // public JSONObject addNewUser(String name, String bankAccountNumber, String bankPin, double bankAmount=0) {
+        // bank account amount defaults to 0
     // }
     
     @Override
