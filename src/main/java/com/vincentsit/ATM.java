@@ -34,7 +34,7 @@ public class ATM {
 
     public String getRegisteredUsers() {
         StringBuilder userDetails = new StringBuilder();
-        for (int i=0; i<users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             JSONObject particularUser = users.get(i);
             String userName = particularUser.get("name").toString();
             String bankAccountNumber = particularUser.get("bankAccountNumber").toString();
@@ -46,7 +46,7 @@ public class ATM {
     public int checkIfUserExists(String accountNumber) {
         // get all usernames into a list
         int index;
-        for (int i=0; i<users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             String storedAccountNumber = users.get(i).get("bankAccountNumber").toString();
             if (storedAccountNumber.equals(accountNumber)) {
                 index = i;
@@ -60,26 +60,20 @@ public class ATM {
         return index >= 0 && pincodeEntry.equals(users.get(index).get("bankPin"));
     }
 
+    public double checkUserBankBalance(int index) {
+        return (double) users.get(index).get("bankAmount");
+    }
+
     public String getUserName(int index) {
         return users.get(index).get("name").toString();
     }
-
-    // get original user, update the cash amount and overwrite the current json
-    // two step process:
-    // step 1 - update JSONObject with put method
-    // Step 2 - write it back to the file
-    // when do we update the file? At the end of the session?
-    // Should a user profile be created and closed when the session finishes?
-    // User is created, get the amount of money, updates that amount of money
-    // save the update into a JSONObject, replace the JSONObject with this
-    // write to file
 
     // pre-condition is that amountToChange is always in the positive
     public double updateBankAmount(int index, String direction, double amountToChange) {
         JSONObject user = users.get(index);
         double bankAmount = (double) user.get("bankAmount");
-        switch(direction.toLowerCase()) {
-            case "deposit": 
+        switch (direction.toLowerCase()) {
+            case "deposit":
                 bankAmount += amountToChange;
                 break;
             case "withdraw":
@@ -108,10 +102,10 @@ public class ATM {
         newUser.put("name", name);
         newUser.put("bankAccountNumber", bankAccountNumber);
         newUser.put("bankPin", bankPin);
-        newUser.put("bankAmount", 0);
+        newUser.put("bankAmount", (double) 0.00);
         users.add(newUser);
     }
-    
+
     @Override
     public String toString() {
         return location + " branch ATM";
