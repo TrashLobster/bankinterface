@@ -38,21 +38,41 @@ public class Main {
         // for now, it will be manually created - but expecting to create object from database (next step)
 
         Scanner scan = new Scanner(System.in);
-        // System.out.println("Do you have an existing account? Y/N?");
-        // boolean hasAccount = false;
+        System.out.println("Do you have an existing account? Y/N?");
 
-        // while (!hasAccount) {
+        String reply = scan.nextLine();
 
-        // }
-        // switch(scan.nextLine().toLowerCase()) {
-        //     case "y":
+        if (reply.toLowerCase().equals("n")) {
+            System.out.println("Would you like to make an account? Y/N");
+            String accountMaking = scan.nextLine();
+            if (accountMaking.toLowerCase().equals("y")) {
+                System.out.println("Please enter your name:");
+                String newUsername = scan.nextLine();
+                System.out.println("What do you want for a bank account number?");
+                String newBankAccountNumber = scan.nextLine();
+                while (machine.checkIfUserExists(newBankAccountNumber) >= 0) {
+                    System.out.println("There is an existing user with that bank account number, please try another one.");
+                    newBankAccountNumber = scan.nextLine();
+                }
+                System.out.println("What will be your pin?");
+                String newBankPin = scan.nextLine();
+                try {
+                    machine.addNewUser(newUsername, newBankAccountNumber, newBankPin);
+                    System.out.println("Thank you. Your account has been created. Please login with your bank account number.");
+                    // System.out.println(machine.getUsers().toString());
+                    body.put("users", machine.getUsers());
+                    writeToFile(body, fileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                System.out.println("Please come back when you have an account.");
+                scan.close();
+                return;
+            }
+        }
 
-        //         break;
-        //     case "n":
-        //         break;
-        //     default:
-        //         break;
-        // }
         System.out.println("Please enter your bank number: ");
         String bankNumberEntry = scan.nextLine();
         
@@ -72,7 +92,6 @@ public class Main {
 
         boolean verified = false;
 
-        // TODO: fix this logic here
         while (pincodeTries > 0 && !verified) {
             if (pincodeTries == 5) {
                 System.out.println("\nPlease enter your pincode:");
@@ -99,15 +118,15 @@ public class Main {
             int choice = scan.nextInt();    
             switch(choice) {
                 case 1:
-                    // System.out.println("Your bank account has " + vincent.getBankAmount());
+                    System.out.println("Your bank account has " + machine.checkUserBankBalance(recordNumber));
                     break;
                 case 2:
                     System.out.println("How much would you like to withdraw?");
-                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "withdraw", scan.nextInt()));
+                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "withdraw", scan.nextDouble()));
                     break;
                 case 3:
                     System.out.println("How much would you like to deposit?");
-                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "deposit", scan.nextInt()));
+                    System.out.println("Your bank account has $" + machine.updateBankAmount(recordNumber, "deposit", scan.nextDouble()));
                     break;
                 case 4:
                     quit = true;
