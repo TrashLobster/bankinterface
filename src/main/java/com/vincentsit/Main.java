@@ -66,7 +66,6 @@ public class Main {
         }
         System.out.println("Found matching bank number.\nWelcome " + machine.getUserName(recordNumber));
 
-        System.out.println("Please enter your pincode: ");
         int pincodeTries = 5;
         
         String bankPinEntry;
@@ -75,11 +74,11 @@ public class Main {
 
         // TODO: fix this logic here
         while (pincodeTries > 0 && !verified) {
-            // if (pincodeTries == 5) {
-            //     System.out.println("\nPlease enter your pincode:");
-            // } else {
-            //     System.out.println("\nPlease try again. You have " + pincodeTries + " tries left.");
-            // }
+            if (pincodeTries == 5) {
+                System.out.println("\nPlease enter your pincode:");
+            } else {
+                System.out.println("\nPlease try again. You have " + pincodeTries + " tries left.");
+            }
             bankPinEntry = scan.nextLine();
             pincodeTries--;
             if (machine.checkUserCode(recordNumber, bankPinEntry)) {
