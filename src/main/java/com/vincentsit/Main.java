@@ -38,6 +38,21 @@ public class Main {
         // for now, it will be manually created - but expecting to create object from database (next step)
 
         Scanner scan = new Scanner(System.in);
+        // System.out.println("Do you have an existing account? Y/N?");
+        // boolean hasAccount = false;
+
+        // while (!hasAccount) {
+
+        // }
+        // switch(scan.nextLine().toLowerCase()) {
+        //     case "y":
+
+        //         break;
+        //     case "n":
+        //         break;
+        //     default:
+        //         break;
+        // }
         System.out.println("Please enter your bank number: ");
         String bankNumberEntry = scan.nextLine();
         

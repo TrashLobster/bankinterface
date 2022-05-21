@@ -93,9 +93,24 @@ public class ATM {
         return bankAmount;
     }
 
-    // public JSONObject addNewUser(String name, String bankAccountNumber, String bankPin, double bankAmount=0) {
+    public void addNewUser(String name, String bankAccountNumber, String bankPin, double bankAmount) {
+        JSONObject newUser = new JSONObject();
+        newUser.put("name", name);
+        newUser.put("bankAccountNumber", bankAccountNumber);
+        newUser.put("bankPin", bankPin);
+        newUser.put("bankAmount", bankAmount);
+        users.add(newUser);
+    }
+
+    public void addNewUser(String name, String bankAccountNumber, String bankPin) {
         // bank account amount defaults to 0
-    // }
+        JSONObject newUser = new JSONObject();
+        newUser.put("name", name);
+        newUser.put("bankAccountNumber", bankAccountNumber);
+        newUser.put("bankPin", bankPin);
+        newUser.put("bankAmount", 0);
+        users.add(newUser);
+    }
     
     @Override
     public String toString() {
